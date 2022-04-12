@@ -7,7 +7,7 @@
 #include <string.h>
 #include <err.h>
 
-#define NLOOP_FOR_ESTIMATION 100000000UL
+#define NLOOP_FOR_ESTIMATION 1000000UL
 #define NSECS_PER_MSEC 1000000UL
 #define NSECS_PER_SEC 1000000000UL
 
@@ -118,7 +118,7 @@ int main(int argc, char *argv[])
 	}
 
 	int nrecord = total / resol;
-	struct timespec *logbuf = malloc(nrecord * sizeof(struct timespec));
+	struct timespec * logbuf = malloc(nrecord * sizeof(struct timespec));
 	if (!logbuf)
 		err(EXIT_FAILURE, "failed to malloc(logbuf).");
 	
@@ -142,6 +142,7 @@ int main(int argc, char *argv[])
 		if (pids[i] < 0) {
 			goto wait_children;
 		} else if (pids[i] == 0) {
+			if (i > 0) nice(5);
 			child_fn(i, logbuf, nrecord, nloop_per_resol, start);
 		}
 	}
@@ -157,7 +158,7 @@ int main(int argc, char *argv[])
 		}
 		for (i = 0; i < ncreated; i++)
 		{
-			if (wait(NULL))
+			if (wait(NULL) < 0)
 				warn("failed to wait().");
 		}
 	
