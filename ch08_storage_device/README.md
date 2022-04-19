@@ -1,4 +1,4 @@
-# strage device
+# storage device
 
 ## HDD
 HDD はデータを磁気ディスクに保存するストレージデバイスである．
